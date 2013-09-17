@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
 
 import azkaban.utils.Props;
 

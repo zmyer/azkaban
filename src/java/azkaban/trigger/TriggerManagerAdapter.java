@@ -1,12 +1,8 @@
 package azkaban.trigger;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.joda.time.DateTimeZone;
-
-import azkaban.triggerapp.TriggerRunnerManagerException;
 
 public interface TriggerManagerAdapter {
 	public void insertTrigger(Trigger t, String user) throws TriggerManagerException;

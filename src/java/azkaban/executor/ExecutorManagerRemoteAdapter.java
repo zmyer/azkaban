@@ -757,5 +757,11 @@ public class ExecutorManagerRemoteAdapter implements ExecutorManagerAdapter {
 		return executorLoader.fetchFlowHistory(projectId, flowId, from, length, status);
 	}
 
+	@Override
+	public String getUpdaterThreadStage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

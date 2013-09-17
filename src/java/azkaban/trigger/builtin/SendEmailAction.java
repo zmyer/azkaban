@@ -1,14 +1,9 @@
 package azkaban.trigger.builtin;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.log4j.Logger;
-
-import azkaban.sla.SlaOption;
-import azkaban.trigger.Trigger;
 import azkaban.trigger.TriggerAction;
 import azkaban.utils.AbstractMailer;
 import azkaban.utils.EmailMessage;

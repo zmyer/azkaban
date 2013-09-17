@@ -5,10 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.joda.time.ReadablePeriod;
-
-import azkaban.utils.Utils;
-
 public class SlaOption {
 	
 	public static final String TYPE_FLOW_FINISH = "FlowFinish";

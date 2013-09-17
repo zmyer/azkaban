@@ -249,9 +249,6 @@ public class AzkabanWebServer extends AzkabanServer {
 	}
 	
 	private ExecutorManagerAdapter loadExecutorManagerAdapter(Props props) throws Exception {
-//		JdbcExecutorLoader loader = new JdbcExecutorLoader(props);
-//		ExecutorManager execManager = new ExecutorManager(props, loader, true);
-//		return execManager;
 		String executorMode = props.getString("executor.manager.mode", "local");
 		ExecutorManagerAdapter adapter;
 		if(executorMode.equals("local")) {
@@ -285,7 +282,7 @@ public class AzkabanWebServer extends AzkabanServer {
 	private ScheduleManager loadScheduleManager(ExecutorManagerAdapter executorManager, TriggerManager tm, Props props ) throws Exception {
 		logger.info("Loading trigger based scheduler");
 		ScheduleLoader loader = new TriggerBasedScheduleLoader(tm, executorManager, null, ScheduleManager.triggerSource);
-		return new ScheduleManager(executorManager, loader);
+		return new ScheduleManager(loader);
 	}
 //	private TriggerBasedScheduler loadScheduler(ExecutorManager executorManager, ProjectManager projectManager, TriggerManager triggerManager) {
 //		TriggerBasedScheduleLoader loader = new TriggerBasedScheduleLoader(triggerManager, executorManager, projectManager);
@@ -310,6 +307,7 @@ public class AzkabanWebServer extends AzkabanServer {
 			Map<String, Alerter> alerters = loadAlerters(props);
 			SlaAlertAction.setAlerters(alerters);
 			SlaAlertAction.setExecutorManager(executorManager);
+			SlaAlertAction.init(props);
 			CreateTriggerAction.setTriggerManager(triggerManager);
 		}
 

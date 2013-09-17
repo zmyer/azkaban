@@ -2,10 +2,13 @@ package azkaban.jmx;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import azkaban.executor.ExecutorManager;
+import azkaban.executor.ExecutableFlow;
+import azkaban.executor.ExecutionReference;
 import azkaban.executor.ExecutorManagerAdapter;
+import azkaban.utils.Pair;
 
 public class JmxExecutorManagerAdapter implements JmxExecutorManagerAdapterMBean {
 	private ExecutorManagerAdapter manager;
@@ -43,5 +46,25 @@ public class JmxExecutorManagerAdapter implements JmxExecutorManagerAdapterMBean
 	@Override 
 	public List<String> getPrimaryExecutorHostPorts() {
 		return new ArrayList<String>(manager.getPrimaryServerHosts());
+	}
+
+	@Override
+	public String getRunningFlows() {
+		List<Integer> allIds = new ArrayList<Integer>();
+		try {
+			for (ExecutableFlow flow : manager.getRunningFlows()) {
+				allIds.add(flow.getExecutionId());
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Collections.sort(allIds);
+		return allIds.toString();
+	}
+
+	@Override
+	public String getUpdaterThreadStage() {
+		return manager.getUpdaterThreadStage();
 	}
 }

@@ -16,32 +16,18 @@
 
 package azkaban.scheduler;
 
-import java.lang.Thread.State;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.PriorityBlockingQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.ReadablePeriod;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import azkaban.executor.ExecutableFlow;
 import azkaban.executor.ExecutionOptions;
-import azkaban.executor.ExecutorManager;
-import azkaban.executor.ExecutorManagerAdapter;
-import azkaban.executor.ExecutorManagerException;
-import azkaban.flow.Flow;
-import azkaban.project.Project;
-import azkaban.project.ProjectManager;
 import azkaban.sla.SlaOption;
 import azkaban.trigger.TriggerAgent;
 import azkaban.trigger.TriggerStatus;
@@ -65,10 +51,6 @@ public class ScheduleManager implements TriggerAgent {
 	private Map<Integer, Schedule> scheduleIDMap = new LinkedHashMap<Integer, Schedule>();
 	private Map<Pair<Integer, String>, Schedule> scheduleIdentityPairMap = new LinkedHashMap<Pair<Integer, String>, Schedule>();
 	
-	private final ExecutorManagerAdapter executorManager;
-	
-	private ProjectManager projectManager = null;
-	
 	// Used for mbeans to query Scheduler status
 //<<<<<<< HEAD
 //	
@@ -84,16 +66,10 @@ public class ScheduleManager implements TriggerAgent {
 	 * 
 	 * @param loader
 	 */
-	public ScheduleManager (ExecutorManagerAdapter executorManager,
-							ScheduleLoader loader) 
+	public ScheduleManager (ScheduleLoader loader) 
 	{
-		this.executorManager = executorManager;
 		this.loader = loader;
 		
-	}
-	
-	public void setProjectManager(ProjectManager projectManager) {
-		this.projectManager = projectManager;
 	}
 	
 	@Override

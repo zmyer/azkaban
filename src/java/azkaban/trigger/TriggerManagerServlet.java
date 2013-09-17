@@ -1,33 +1,15 @@
 package azkaban.trigger;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.joda.time.DateTime;
-
-import azkaban.execapp.AzkabanExecutorServer;
-import azkaban.execapp.FlowRunnerManager;
-import azkaban.executor.ConnectorParams;
-import azkaban.executor.ExecutableFlow;
-import azkaban.executor.ExecutorManagerException;
 import azkaban.triggerapp.AzkabanTriggerServer;
 import azkaban.triggerapp.TriggerConnectorParams;
-import azkaban.triggerapp.TriggerRunnerManagerException;
-import azkaban.utils.JSONUtils;
-import azkaban.utils.FileIOUtils.JobMetaData;
-import azkaban.utils.FileIOUtils.LogData;
 import azkaban.webapp.servlet.AbstractServiceServlet;
 import azkaban.webapp.servlet.AzkabanServletContextListener;
 

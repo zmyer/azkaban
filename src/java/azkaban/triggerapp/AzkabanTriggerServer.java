@@ -146,45 +146,11 @@ public class AzkabanTriggerServer {
 		return trm;
 	}
 	
-	private TriggerManagerAdapter loadTriggerRunnerManagerAdapter(Props props, TriggerLoader triggerLoader) throws Exception {
-		TriggerManagerAdapter trmAdapter;
-		String trmMode = props.getString("trigger.runner.manager.mode", "local");
-		try {
-			if(trmMode.equals("local")) {
-				trmAdapter = new TriggerManager(props, triggerLoader);
-			} else if(trmMode.equals("remote")) {
-				trmAdapter = null;
-			} else {
-				throw new TriggerManagerException("Unknown trigger runner manager mode " + trmMode);
-			}
-		} catch(Exception e) {
-			throw new Exception("Failed to load Trigger Runner Manager: " + e.getMessage());
-		}
-		return trmAdapter;
-	}
-	
 	private ExecutorManager loadExecutorManager(Props props) throws Exception {
 		logger.info("Loading executor manager");
 		JdbcExecutorLoader loader = new JdbcExecutorLoader(props);
 		ExecutorManager execManager = new ExecutorManager(props, loader);
 		return execManager;
-	}
-	
-	private ExecutorManagerAdapter loadExecutorManagerAdapter(Props props) throws Exception {
-//		JdbcExecutorLoader loader = new JdbcExecutorLoader(props);
-//		ExecutorManager execManager = new ExecutorManager(props, loader, true);
-//		return execManager;
-		String executorMode = props.getString("executor.manager.mode", "local");
-		ExecutorManagerAdapter adapter;
-		if(executorMode.equals("local")) {
-			adapter = loadExecutorManager(props);
-		} else if(executorMode.equals("remote")) {
-			JdbcExecutorLoader loader = new JdbcExecutorLoader(props);
-			adapter = new ExecutorManagerRemoteAdapter(props, loader);
-		} else {
-			throw new Exception("Unknown ExecutorManager mode " + executorMode);
-		}
-		return adapter;
 	}
 	
 	private ProjectManager loadProjectManager(Props props) {

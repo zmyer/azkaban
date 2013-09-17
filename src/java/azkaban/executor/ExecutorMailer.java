@@ -27,8 +27,8 @@ public class ExecutorMailer extends AbstractMailer implements Alerter {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void sendSlaAlertEmail(SlaOption slaOption, String slaMessage) {
-		String subject = "Sla Violation Alert";
+	private void sendSlaAlertEmail(SlaOption slaOption, String slaMessage, String subject) {
+		//String subject = "Sla Alert";
 		String body = slaMessage;
 		List<String> emailList = (List<String>) slaOption.getInfo().get(SlaOption.INFO_EMAIL_LIST);
 		if (emailList != null && !emailList.isEmpty()) {
@@ -206,8 +206,7 @@ public class ExecutorMailer extends AbstractMailer implements Alerter {
 	}
 
 	@Override
-	public void alertOnSla(SlaOption slaOption, String slaMessage)
-			throws Exception {
-		sendSlaAlertEmail(slaOption, slaMessage);		
+	public void alertOnSla(SlaOption slaOption, String slaMessage, String subject) throws Exception {
+		sendSlaAlertEmail(slaOption, slaMessage, subject);		
 	}
 }

@@ -24,14 +24,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import azkaban.executor.ExecutableFlow;
 import azkaban.flow.CommonJobProperties;
-
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 

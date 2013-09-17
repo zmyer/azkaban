@@ -1,6 +1,5 @@
 package azkaban.jmx;
 
-import java.util.List;
 
 public interface JmxTriggerManagerMBean {	
 	

@@ -1,11 +1,8 @@
 package azkaban.jmx;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.joda.time.DateTime;
 
-import azkaban.trigger.TriggerManager;
 import azkaban.trigger.TriggerManagerAdapter;
 import azkaban.trigger.TriggerManagerAdapter.TriggerJMX;
 

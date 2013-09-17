@@ -14,7 +14,6 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import azkaban.triggerapp.TriggerConnectorParams;
-import azkaban.triggerapp.TriggerRunnerManagerException;
 import azkaban.utils.JSONUtils;
 import azkaban.utils.Pair;
 import azkaban.utils.Props;

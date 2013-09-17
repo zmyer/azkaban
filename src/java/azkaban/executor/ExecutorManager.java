@@ -84,7 +84,7 @@ public class ExecutorManager implements ExecutorManagerAdapter {
 		void alertOnSuccess(ExecutableFlow exflow) throws Exception;
 		void alertOnError(ExecutableFlow exflow, String ... extraReasons) throws Exception;
 		void alertOnFirstError(ExecutableFlow exflow) throws Exception;
-		void alertOnSla(SlaOption slaOption, String slaMessage) throws Exception;
+		void alertOnSla(SlaOption slaOption, String slaMessage, String subject) throws Exception;
 	}
 	
 	public ExecutorManager(Props props, ExecutorLoader loader) throws ExecutorManagerException {
@@ -254,7 +254,8 @@ public class ExecutorManager implements ExecutorManagerAdapter {
 		return executingManager.getState();
 	}
 	
-	public String getExecutorThreadStage() {
+	@Override
+	public String getUpdaterThreadStage() {
 		return updaterStage;
 	}
 	
@@ -340,15 +341,15 @@ public class ExecutorManager implements ExecutorManagerAdapter {
 		}
 		return flows;
 	}
-	
-	public String getRunningFlowIds() {
-		List<Integer> allIds = new ArrayList<Integer>();
-		for (Pair<ExecutionReference, ExecutableFlow> ref : runningFlows.values()) {
-			allIds.add(ref.getSecond().getExecutionId());
-		}
-		Collections.sort(allIds);
-		return allIds.toString();
-	}
+
+//	public String getRunningFlowIds() {
+//		List<Integer> allIds = new ArrayList<Integer>();
+//		for (Pair<ExecutionReference, ExecutableFlow> ref : runningFlows.values()) {
+//			allIds.add(ref.getSecond().getExecutionId());
+//		}
+//		Collections.sort(allIds);
+//		return allIds.toString();
+//	}
 	
 	public List<ExecutableFlow> getRecentlyFinishedFlows() {
 		return new ArrayList<ExecutableFlow>(recentlyFinished.values());

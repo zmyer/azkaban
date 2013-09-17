@@ -1,8 +1,11 @@
 package azkaban.jmx;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import azkaban.executor.ExecutableFlow;
 import azkaban.executor.ExecutorManager;
 
 public class JmxExecutorManager implements JmxExecutorManagerMBean {
@@ -24,7 +27,7 @@ public class JmxExecutorManager implements JmxExecutorManagerMBean {
 	
 	@Override
 	public String getExecutorThreadStage() {
-		return manager.getExecutorThreadStage();
+		return manager.getUpdaterThreadStage();
 	}
 
 	@Override
@@ -44,7 +47,12 @@ public class JmxExecutorManager implements JmxExecutorManagerMBean {
 
 	@Override
 	public String getRunningFlows() {
-		return manager.getRunningFlowIds();
+		List<Integer> allIds = new ArrayList<Integer>();
+		for (ExecutableFlow flow : manager.getRunningFlows()) {
+			allIds.add(flow.getExecutionId());
+		}
+		Collections.sort(allIds);
+		return allIds.toString();
 	}
 
 	
