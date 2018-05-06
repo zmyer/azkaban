@@ -1,10 +1,30 @@
+
+*.swp
+.classpath
+.gradle/
+.project
+.settings/
+/bin
 bin/
 build/
-.gradle/
-.settings/
-.idea/
+.DS_Store
+.bundle/
+Gemfile.lock
+vendor/
+**/velocity.log
+
+# local & temp directories are ignored so that they can be used to store temporary files such as local testing configurations.
+local/
+temp/
+
+# Intellij files
+.idea
 *.iml
-/bin
-.classpath
-.project
-*.swp
+*.ipr
+*.iws
+.ideaDataSources/
+.shelf
+# Intellij default build output directory
+out/
+
+currentpid

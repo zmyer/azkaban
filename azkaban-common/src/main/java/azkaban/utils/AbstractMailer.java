@@ -19,101 +19,38 @@ package azkaban.utils;
 import java.util.Collection;
 
 public class AbstractMailer {
-  private static int MB_IN_BYTES = 1048576;
-  private String clientHostname;
-  private int clientPort;
-  private boolean usesSSL;
-  private boolean usesAuth;
 
-  private String mailHost;
-  private String mailUser;
-  private String mailPassword;
-  private String mailSender;
-  private String azkabanName;
+  private static final int MB_IN_BYTES = 1048576;
+  protected final EmailMessageCreator messageCreator;
+  private final String azkabanName;
 
-  private String referenceURL;
+  private final long attachmentMazSizeInByte;
 
-  private long attachmentMazSizeInByte;
-
-  public AbstractMailer(Props props) {
+  public AbstractMailer(final Props props, final EmailMessageCreator messageCreator) {
     this.azkabanName = props.getString("azkaban.name", "azkaban");
-    this.mailHost = props.getString("mail.host", "localhost");
-    this.mailUser = props.getString("mail.user", "");
-    this.mailPassword = props.getString("mail.password", "");
-    long maxAttachmentSizeInMB =
+    this.messageCreator = messageCreator;
+    final long maxAttachmentSizeInMB =
         props.getInt("mail.max.attachment.size.mb", 100);
-
-    attachmentMazSizeInByte = maxAttachmentSizeInMB * MB_IN_BYTES;
-
-    this.mailSender = props.getString("mail.sender", "");
-    this.usesAuth = props.getBoolean("mail.useAuth", true);
-
-    this.clientHostname = props.get("server.hostname");
-    this.clientPort = props.getInt("server.port");
-    this.usesSSL = props.getBoolean("server.useSSL");
-
-    if (usesSSL) {
-      referenceURL =
-          "https://" + clientHostname
-              + (clientPort == 443 ? "/" : ":" + clientPort + "/");
-    } else {
-      referenceURL =
-          "http://" + clientHostname
-              + (clientPort == 80 ? "/" : ":" + clientPort + "/");
-    }
+    this.attachmentMazSizeInByte = maxAttachmentSizeInMB * MB_IN_BYTES;
   }
 
-  public String getReferenceURL() {
-    return referenceURL;
-  }
-
-  protected EmailMessage createEmailMessage(String subject, String mimetype,
-      Collection<String> emailList) {
-    EmailMessage message = new EmailMessage(mailHost, mailUser, mailPassword);
-    message.setFromAddress(mailSender);
+  protected EmailMessage createEmailMessage(final String subject, final String mimetype,
+      final Collection<String> emailList) {
+    final EmailMessage message = this.messageCreator.createMessage();
     message.addAllToAddress(emailList);
     message.setMimeType(mimetype);
     message.setSubject(subject);
-    message.setAuth(usesAuth);
-
     return message;
   }
 
-  public EmailMessage prepareEmailMessage(String subject, String mimetype,
-      Collection<String> emailList) {
-    return createEmailMessage(subject, mimetype, emailList);
-  }
-
   public String getAzkabanName() {
-    return azkabanName;
-  }
-
-  public String getMailHost() {
-    return mailHost;
-  }
-
-  public String getMailUser() {
-    return mailUser;
-  }
-
-  public String getMailPassword() {
-    return mailPassword;
-  }
-
-  public String getMailSender() {
-    return mailSender;
+    return this.azkabanName;
   }
 
   /**
    * Attachment maximum size in bytes
-   * 
-   * @return
    */
-  public long getAttachmentMaxSize() {
-    return attachmentMazSizeInByte;
-  }
-
-  public boolean hasMailAuth() {
-    return usesAuth;
+  long getAttachmentMaxSize() {
+    return this.attachmentMazSizeInByte;
   }
 }

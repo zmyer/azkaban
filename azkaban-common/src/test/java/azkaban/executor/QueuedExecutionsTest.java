@@ -1,52 +1,47 @@
+/*
+ * Copyright 2017 LinkedIn Corp.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package azkaban.executor;
 
-import java.io.File;
+import azkaban.utils.Pair;
+import azkaban.utils.TestUtils;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Test;
 
-import azkaban.flow.Flow;
-import azkaban.project.Project;
-import azkaban.utils.JSONUtils;
-import azkaban.utils.Pair;
-import azkaban.utils.TestUtils;
-
 public class QueuedExecutionsTest {
-
-  private File getFlowDir(String flow) {
-    return TestUtils.getFlowDir("exectest1", flow);
-  }
 
   /*
    * Helper method to create an (ExecutionReference, ExecutableFlow) from
    * serialized description
    */
   private Pair<ExecutionReference, ExecutableFlow> createExecutablePair(
-    String flowName, int execId) throws IOException {
-    File jsonFlowFile = getFlowDir(flowName);
-    @SuppressWarnings("unchecked")
-    HashMap<String, Object> flowObj =
-      (HashMap<String, Object>) JSONUtils.parseJSONFromFile(jsonFlowFile);
-
-    Flow flow = Flow.flowFromObject(flowObj);
-    Project project = new Project(1, "flow");
-    HashMap<String, Flow> flowMap = new HashMap<String, Flow>();
-    flowMap.put(flow.getId(), flow);
-    project.setFlows(flowMap);
-    ExecutableFlow execFlow = new ExecutableFlow(project, flow);
+      final String flowName, final int execId) throws IOException {
+    final ExecutableFlow execFlow = TestUtils.createTestExecutableFlow("exectest1", flowName);
     execFlow.setExecutionId(execId);
-    ExecutionReference ref = new ExecutionReference(execId);
-    return new Pair<ExecutionReference, ExecutableFlow>(ref, execFlow);
+    final ExecutionReference ref = new ExecutionReference(execId);
+    return new Pair<>(ref, execFlow);
   }
 
   public List<Pair<ExecutionReference, ExecutableFlow>> getDummyData()
-    throws IOException {
-    List<Pair<ExecutionReference, ExecutableFlow>> dataList =
-      new ArrayList<Pair<ExecutionReference, ExecutableFlow>>();
+      throws IOException {
+    final List<Pair<ExecutionReference, ExecutableFlow>> dataList =
+        new ArrayList<>();
     dataList.add(createExecutablePair("exec1", 1));
     dataList.add(createExecutablePair("exec2", 2));
     return dataList;
@@ -55,10 +50,10 @@ public class QueuedExecutionsTest {
   /* Test enqueue method happy case */
   @Test
   public void testEnqueueHappyCase() throws IOException,
-    ExecutorManagerException {
-    QueuedExecutions queue = new QueuedExecutions(5);
-    List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
-    for (Pair<ExecutionReference, ExecutableFlow> pair : dataList) {
+      ExecutorManagerException {
+    final QueuedExecutions queue = new QueuedExecutions(5);
+    final List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
+    for (final Pair<ExecutionReference, ExecutableFlow> pair : dataList) {
       queue.enqueue(pair.getSecond(), pair.getFirst());
     }
 
@@ -69,10 +64,10 @@ public class QueuedExecutionsTest {
   /* Test enqueue duplicate execution ids */
   @Test(expected = ExecutorManagerException.class)
   public void testEnqueueDuplicateExecution() throws IOException,
-    ExecutorManagerException {
-    Pair<ExecutionReference, ExecutableFlow> pair1 =
-      createExecutablePair("exec1", 1);
-    QueuedExecutions queue = new QueuedExecutions(5);
+      ExecutorManagerException {
+    final Pair<ExecutionReference, ExecutableFlow> pair1 =
+        createExecutablePair("exec1", 1);
+    final QueuedExecutions queue = new QueuedExecutions(5);
     queue.enqueue(pair1.getSecond(), pair1.getFirst());
     queue.enqueue(pair1.getSecond(), pair1.getFirst());
   }
@@ -80,10 +75,10 @@ public class QueuedExecutionsTest {
   /* Test enqueue more than capacity */
   @Test(expected = ExecutorManagerException.class)
   public void testEnqueueOverflow() throws IOException,
-    ExecutorManagerException {
-    Pair<ExecutionReference, ExecutableFlow> pair1 =
-      createExecutablePair("exec1", 1);
-    QueuedExecutions queue = new QueuedExecutions(1);
+      ExecutorManagerException {
+    final Pair<ExecutionReference, ExecutableFlow> pair1 =
+        createExecutablePair("exec1", 1);
+    final QueuedExecutions queue = new QueuedExecutions(1);
     queue.enqueue(pair1.getSecond(), pair1.getFirst());
     queue.enqueue(pair1.getSecond(), pair1.getFirst());
   }
@@ -91,8 +86,8 @@ public class QueuedExecutionsTest {
   /* Test EnqueueAll method */
   @Test
   public void testEnqueueAll() throws IOException, ExecutorManagerException {
-    QueuedExecutions queue = new QueuedExecutions(5);
-    List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
+    final QueuedExecutions queue = new QueuedExecutions(5);
+    final List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
     queue.enqueueAll(dataList);
     Assert.assertTrue(queue.getAllEntries().containsAll(dataList));
     Assert.assertTrue(dataList.containsAll(queue.getAllEntries()));
@@ -101,8 +96,8 @@ public class QueuedExecutionsTest {
   /* Test size method */
   @Test
   public void testSize() throws IOException, ExecutorManagerException {
-    QueuedExecutions queue = new QueuedExecutions(5);
-    List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
+    final QueuedExecutions queue = new QueuedExecutions(5);
+    final List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
     queue.enqueueAll(dataList);
     Assert.assertEquals(queue.size(), 2);
   }
@@ -110,8 +105,8 @@ public class QueuedExecutionsTest {
   /* Test dequeue method */
   @Test
   public void testDequeue() throws IOException, ExecutorManagerException {
-    QueuedExecutions queue = new QueuedExecutions(5);
-    List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
+    final QueuedExecutions queue = new QueuedExecutions(5);
+    final List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
     queue.enqueueAll(dataList);
     queue.dequeue(dataList.get(0).getFirst().getExecId());
     Assert.assertEquals(queue.size(), 1);
@@ -121,8 +116,8 @@ public class QueuedExecutionsTest {
   /* Test clear method */
   @Test
   public void testClear() throws IOException, ExecutorManagerException {
-    QueuedExecutions queue = new QueuedExecutions(5);
-    List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
+    final QueuedExecutions queue = new QueuedExecutions(5);
+    final List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
     queue.enqueueAll(dataList);
     Assert.assertEquals(queue.size(), 2);
     queue.clear();
@@ -132,8 +127,8 @@ public class QueuedExecutionsTest {
   /* Test isEmpty method */
   @Test
   public void testIsEmpty() throws IOException, ExecutorManagerException {
-    QueuedExecutions queue = new QueuedExecutions(5);
-    List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
+    final QueuedExecutions queue = new QueuedExecutions(5);
+    final List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
     Assert.assertTrue(queue.isEmpty());
     queue.enqueueAll(dataList);
     Assert.assertEquals(queue.size(), 2);
@@ -144,9 +139,9 @@ public class QueuedExecutionsTest {
   /* Test fetchHead method */
   @Test
   public void testFetchHead() throws IOException, ExecutorManagerException,
-    InterruptedException {
-    QueuedExecutions queue = new QueuedExecutions(5);
-    List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
+      InterruptedException {
+    final QueuedExecutions queue = new QueuedExecutions(5);
+    final List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
     Assert.assertTrue(queue.isEmpty());
     queue.enqueueAll(dataList);
     Assert.assertEquals(queue.fetchHead(), dataList.get(0));
@@ -156,9 +151,9 @@ public class QueuedExecutionsTest {
   /* Test isFull method */
   @Test
   public void testIsFull() throws IOException, ExecutorManagerException,
-    InterruptedException {
-    QueuedExecutions queue = new QueuedExecutions(2);
-    List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
+      InterruptedException {
+    final QueuedExecutions queue = new QueuedExecutions(2);
+    final List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
     queue.enqueueAll(dataList);
     Assert.assertTrue(queue.isFull());
   }
@@ -166,11 +161,11 @@ public class QueuedExecutionsTest {
   /* Test hasExecution method */
   @Test
   public void testHasExecution() throws IOException, ExecutorManagerException,
-    InterruptedException {
-    QueuedExecutions queue = new QueuedExecutions(2);
-    List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
+      InterruptedException {
+    final QueuedExecutions queue = new QueuedExecutions(2);
+    final List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
     queue.enqueueAll(dataList);
-    for (Pair<ExecutionReference, ExecutableFlow> pair : dataList) {
+    for (final Pair<ExecutionReference, ExecutableFlow> pair : dataList) {
       Assert.assertTrue(queue.hasExecution(pair.getFirst().getExecId()));
     }
     Assert.assertFalse(queue.hasExecution(5));
@@ -181,26 +176,26 @@ public class QueuedExecutionsTest {
   /* Test getFlow method */
   @Test
   public void testGetFlow() throws IOException, ExecutorManagerException,
-    InterruptedException {
-    QueuedExecutions queue = new QueuedExecutions(2);
-    List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
+      InterruptedException {
+    final QueuedExecutions queue = new QueuedExecutions(2);
+    final List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
     queue.enqueueAll(dataList);
-    for (Pair<ExecutionReference, ExecutableFlow> pair : dataList) {
+    for (final Pair<ExecutionReference, ExecutableFlow> pair : dataList) {
       Assert.assertEquals(pair.getSecond(),
-        queue.getFlow(pair.getFirst().getExecId()));
+          queue.getFlow(pair.getFirst().getExecId()));
     }
   }
 
   /* Test getReferences method */
   @Test
   public void testGetReferences() throws IOException, ExecutorManagerException,
-    InterruptedException {
-    QueuedExecutions queue = new QueuedExecutions(2);
-    List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
+      InterruptedException {
+    final QueuedExecutions queue = new QueuedExecutions(2);
+    final List<Pair<ExecutionReference, ExecutableFlow>> dataList = getDummyData();
     queue.enqueueAll(dataList);
-    for (Pair<ExecutionReference, ExecutableFlow> pair : dataList) {
+    for (final Pair<ExecutionReference, ExecutableFlow> pair : dataList) {
       Assert.assertEquals(pair.getFirst(),
-        queue.getReference(pair.getFirst().getExecId()));
+          queue.getReference(pair.getFirst().getExecId()));
     }
   }
 }
